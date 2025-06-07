@@ -65,7 +65,7 @@ fig, (ax_imbalance, ax_activations) = plt.subplots(2, 1, figsize=(16, 9), constr
 # --- Plot 1: Imbalance ---
 imbalance_df.plot(ax=ax_imbalance, linestyle='-', marker='o')
 ax_imbalance.set_title("Electricity Imbalance (MWh)")
-ax_imbalance.set_ylabel("Imbalance")
+ax_imbalance.set_ylabel("Imbalance (MWh)")
 ax_imbalance.axhline(0, color='gray', linestyle='--', linewidth=0.8)
 ax_imbalance.legend(title="Country")
 ax_imbalance.set_xlim(shared_xlim)
