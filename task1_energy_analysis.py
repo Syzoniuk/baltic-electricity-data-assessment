@@ -1,6 +1,5 @@
 # task1_imbalance_activation_plot.py
 # Author: Oleksandr Syzoniuk
-# Description: Step 1 – Plot electricity imbalance data for the Baltic countries using the Transparency Dashboard API.
 
 import requests
 import pandas as pd
