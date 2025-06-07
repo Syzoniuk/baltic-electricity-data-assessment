@@ -75,11 +75,13 @@ If the API had returned activation values, I would expect **corrective actions t
 
 ---
 
-## 📎 Project Files
+## 📁 Project Files
 
-📁 baltic-electricity-data-assessment
-├── task1_energy_analysis.py ← Final Python script
+```
+baltic-electricity-data-assessment/
+├── task1_energy_analysis.py         # Final Python script
 ├── images/
-│ ├── imbalance_activation_2025.png ← Required task period
-│ └── imbalance_activation_2024.png ← Logic validation
-└── README.md ← This file
+│   ├── imbalance_activation_2025.png   # Required task period
+│   └── imbalance_activation_2024.png   # Logic validation
+└── README.md                       # This file
+```
