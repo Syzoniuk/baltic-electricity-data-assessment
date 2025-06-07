@@ -1,6 +1,3 @@
-# task1_imbalance_activation_plot.py
-# Author: Oleksandr Syzoniuk
-
 import requests
 import pandas as pd
 import matplotlib.pyplot as plt
