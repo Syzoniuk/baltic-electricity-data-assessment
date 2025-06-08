@@ -1,13 +1,22 @@
-# ⚡ Baltic Electricity Data Assessment – Task 1
+# ⚡ Baltic Electricity Data Assessment
 
 **Author:** Oleksandr Syzoniuk  
 **Repository:** `baltic-electricity-data-assessment`  
-**Script:** `task1_energy_analysis.py`  
 **Date:** June 2025
 
 ---
 
-## 🧭 Task Summary
+
+## 📌 Navigation
+
+- [Task 1 – Baltic Imbalance & Activation Analysis](#-task-1--baltic-imbalance--activation-analysis)
+- [Task 2 – EQ Profile Model Assessment](#-task-2--eq-profile-model-assessment)
+  - [Task 2.1 – Total Generator Capacity](#task-21--total-generator-capacity)
+- [Task 3 – ... (Add when ready)](#)
+
+---
+
+## 🧭 Task 1 – Baltic Imbalance & Activation Analysis
 
 1. Inherit data on **Baltic imbalance volumes**.
 2. Inherit data on **activation volumes** (upward and downward).
@@ -75,7 +84,7 @@ If the API had returned activation values, I would expect **corrective actions t
 
 ---
 
-## 📁 Project Files
+## 📁 Project Files (Task 2)
 
 ```
 baltic-electricity-data-assessment/
@@ -83,5 +92,61 @@ baltic-electricity-data-assessment/
 ├── images/
 │   ├── imbalance_activation_2025.png   # Required task period
 │   └── imbalance_activation_2024.png   # Logic validation
-└── README.md                       # This file
+└
+```
+
+---
+
+
+---
+
+## ⚙️ Task 2 – EQ Profile Model Assessment
+
+This task group covers semantic and structural evaluations of CGMES-based equipment profiles used in power systems.  
+Each sub-task examines specific elements of the EQ model — from generation capacity to transformer limits and data consistency.
+
+---
+
+### 🧮 Task 2.1 – Total Generator Capacity
+
+---
+
+## 🧭 Task Summary
+
+> **Objective:**  
+Extract and calculate the **total production capacity** of all generators modeled in the provided CGMES EQ profile XML file.
+
+---
+
+## 🛠️ Thought Process & Tooling
+
+This task focuses on **static power system modeling** via the EQ (Equipment) profile in CIM/XML format. I chose to directly parse the XML with Python’s `xml.etree.ElementTree`, as it’s lightweight and sufficient for structured CIM data when no inference or semantic layer is needed.
+
+The script follows a simple logic:
+1. Locate all `<cim:GeneratingUnit>` elements.
+2. Read each unit’s `maxOperatingP` value.
+3. Sum the values to determine **total production capacity** in megawatts (MW).
+
+> 🗂️ The input file was the official `20210325T1530Z_1D_NL_EQ_001.xml` EQ profile provided for this assignment.
+
+---
+
+## ✍️ Result Summary – Answer to Task 2.1
+
+The script parsed all generating units and extracted their declared maximum active power output. The final output displays:
+
+- Each generator’s name (if available) and capacity in MW.
+- A total summation of available generation capacity across the modeled system.
+
+> 💡 This allows a clear, reproducible evaluation of production potential from the static network model.
+
+---
+
+## 📁 Project Files (Task 2)
+
+```
+baltic-electricity-data-assessment/
+├── Task2_EQ_Profile_Assessment/
+│   ├── task2_1_total_capacity.py             # Python script for total generator capacity
+│   └── 20210325T1530Z_1D_NL_EQ_001.xml       # Input EQ profile XML file
 ```
