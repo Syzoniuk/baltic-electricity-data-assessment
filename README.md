@@ -25,7 +25,7 @@
 
 ---
 
-## Thought Process & Tooling
+### Thought Process & Tooling
 
 To ensure clarity and modularity, I broke the task into data fetching, filtering, alignment, and plotting stages. Here’s why I chose each tool:
 
@@ -40,7 +40,7 @@ To ensure clarity and modularity, I broke the task into data fetching, filtering
 
 ---
 
-## 📈 Final Output – Visualizations
+###  Final Output – Visualizations
 
 ###  Figure 1 – 2025-02-07 to 2025-02-11
 
@@ -62,7 +62,7 @@ Here, upward and downward activation data are available. They are plotted with d
 
 ---
 
-## ✍️ Analysis – Answer to Task Part 4
+### ✍️ Analysis – Answer to Task Part 4
 
 Although the API did not contain valid data for the requested 2025-02-07 to 2025-02-11 period, I reproduced the same logic using the 2024-02-07 to 2024-02-11 window. This allows demonstration of the expected dynamics.
 
@@ -84,7 +84,7 @@ If the API had returned activation values, I would expect **corrective actions t
 
 ---
 
-## 📁 Project Files (Task 1)
+### 📁 Project Files (Task 1)
 
 ```
 baltic-electricity-data-assessment/
@@ -104,7 +104,7 @@ Each sub-task examines specific elements of the EQ model — from generation cap
 
 ---
 
-### 🧮 Task 2.1 – Total Generator Capacity
+## 🧮 Task 2.1 – Total Generator Capacity
 
 ---
 
@@ -113,7 +113,7 @@ Extract and calculate the **total production capacity** of all generators modele
 
 ---
 
-## Thought Process & Tooling
+### Thought Process & Tooling
 
 This task focuses on **static power system modeling** via the EQ (Equipment) profile in CIM/XML format. I chose to directly parse the XML with Python’s `xml.etree.ElementTree`, as it’s lightweight and sufficient for structured CIM data when no inference or semantic layer is needed.
 
@@ -122,11 +122,9 @@ The script follows a simple logic:
 2. Read each unit’s `maxOperatingP` value.
 3. Sum the values to determine **total production capacity** in megawatts (MW).
 
-> 🗂️ The input file was the official `20210325T1530Z_1D_NL_EQ_001.xml` EQ profile provided for this assignment.
-
 ---
 
-## Result Summary – Answer to Task 2.1
+### Result Summary – Answer to Task 2.1
 
 The script parsed all generating units and extracted their declared maximum active power output. The final output displays:
 
@@ -139,7 +137,7 @@ The script parsed all generating units and extracted their declared maximum acti
 
 ---
 
-### 🔌 Task 2.2 – Transformer Winding Voltages
+## 🔌 Task 2.2 – Transformer Winding Voltages
 
 ---
 
@@ -148,7 +146,7 @@ Identify and extract the **rated voltages** for each winding of a specific trans
 
 ---
 
-##  Thought Process & Tooling
+###  Thought Process & Tooling
 
 We focus here on a specific transformer with ID `_2184f365-8cd5-4b5d-8a28-9d68603bb6a4`.  
 The logic follows these steps:
@@ -164,7 +162,7 @@ Namespaces used:
 
 ---
 
-## ✍️ Result Summary – Answer to Task 2.2
+### ✍️ Result Summary – Answer to Task 2.2
 
 The script successfully identified and printed the **rated voltages (in kV)** for each winding of the transformer.  
 It lists all connected windings, their names, and their voltage ratings.
@@ -188,7 +186,7 @@ Extract the **current limit values (Amperes)** for a specific transmission line 
 
 ---
 
-##  Thought Process & Tooling
+###  Thought Process & Tooling
 
 This task focuses on understanding how operational limits are **linked across different CIM elements**:
 - First, I locate `OperationalLimitSet` blocks where the description contains the target line name (`NL-Line_5`).
@@ -198,7 +196,7 @@ The XML is parsed using `xml.etree.ElementTree`, and namespace handling ensures 
 
 ---
 
-## ✍️ Result Summary – Answer to Task 2.3
+### ✍️ Result Summary – Answer to Task 2.3
 
 The script produced the following output:
 
