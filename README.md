@@ -200,11 +200,11 @@ The XML is parsed using `xml.etree.ElementTree`, and namespace handling ensures 
 
 The script produced the following output:
 
-Limit Name: TATL <br>
-Current Value (A): 500
-
-Limit Name: PATL <br>
-Current Value (A): 1876
+  Limit Type  Normal Value (A) <br>
+0       PATL            1876.0 <br>
+1       TATL             500.0 <br>
+2       PATL            1876.0 <br>
+3       TATL             500.0 <br>
 
 ---
 In CGMES EQ profiles, transmission lines can have two distinct current limits:
