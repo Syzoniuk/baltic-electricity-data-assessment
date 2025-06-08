@@ -139,11 +139,43 @@ The script parsed all generating units and extracted their declared maximum acti
 
 ---
 
-## 📁 Project Files (Task 2)
+---
 
-```
-baltic-electricity-data-assessment/
-├── Task2_EQ_Profile_Assessment/
-│   ├── task2_1_total_capacity.py             # Python script for total generator capacity
-│   └── 20210325T1530Z_1D_NL_EQ_001.xml       # Input EQ profile XML file
-```
+### 🔌 Task 2.2 – Transformer Winding Voltages
+
+---
+
+## 🧭 Task Summary
+
+> **Objective:**  
+Identify and extract the **rated voltages** for each winding of a specific transformer (by ID) from the CGMES EQ profile XML.
+
+---
+
+## 🛠️ Thought Process & Tooling
+
+We focus here on a specific transformer with ID `_2184f365-8cd5-4b5d-8a28-9d68603bb6a4`.  
+The logic follows these steps:
+
+1. Search all `<cim:PowerTransformerEnd>` elements.
+2. Match those linked to the correct transformer via the RDF reference.
+3. Extract each winding’s `ratedU` and name (if available).
+
+Namespaces used:
+
+- `cim`: CIM standard for equipment metadata.
+- `rdf`: Used for referencing transformer relationships via IDs.
+
+---
+
+## ✍️ Result Summary – Answer to Task 2.2
+
+The script successfully identified and printed the **rated voltages (in kV)** for each winding of the transformer.  
+It lists all connected windings, their names, and their voltage ratings.
+
+Winding: NL_TR2_2 <br>
+Voltage (kV): 220
+
+Winding: NL_TR2_2 <br>
+Voltage (kV): 15.75
+
