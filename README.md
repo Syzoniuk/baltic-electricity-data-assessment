@@ -35,7 +35,7 @@ To ensure clarity and modularity, I broke the task into data fetching, filtering
 
 ### 🔹 Figure 1 – 2025-02-07 to 2025-02-11
 
-![Figure 1](images/imbalance_activation_2025.png)
+![Figure 1](Task1_Imbalance_Analysis/images/imbalance_activation_2025.png)
 
 During this required period, the **“Baltics” aggregate column is empty** in the Transparency Dashboard data.  
 So, I plotted individual countries — **Estonia, Latvia, and Lithuania** — to show granular insights.
@@ -46,7 +46,7 @@ This approach keeps the structure intact and ensures full visibility. The legend
 
 ### 🔹 Figure 2 – 2024-02-07 to 2024-02-11 (Test)
 
-![Figure 2](images/imbalance_activation_2024.png)
+![Figure 2](Task1_Imbalance_Analysis/images/imbalance_activation_2024.png)
 
 This test run confirms that the **plotting logic and dataset parsing work correctly**.  
 Here, upward and downward activation data are available. They are plotted with dashed/solid lines and marker distinctions to maintain visual clarity.
