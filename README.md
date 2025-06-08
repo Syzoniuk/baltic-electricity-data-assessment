@@ -178,7 +178,8 @@ Voltage (kV): 15.75
 
 
 
-### ⚡ Task 2.3 – Current Limits for Line: NL-Line_5
+
+## ⚡ Task 2.3 – Current Limits for Line: NL-Line_5
 
 ---
 
@@ -201,11 +202,12 @@ The XML is parsed using `xml.etree.ElementTree`, and namespace handling ensures 
 
 The script produced the following output:
 
-Limit Name: TATL
+Limit Name: TATL <br>
 Current Value (A): 500
 
-Limit Name: PATL
+Limit Name: PATL <br>
 Current Value (A): 1876
+
 ---
 In CGMES EQ profiles, transmission lines can have two distinct current limits:
 
