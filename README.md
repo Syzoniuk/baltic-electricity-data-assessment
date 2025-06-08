@@ -179,3 +179,57 @@ Voltage (kV): 220
 Winding: NL_TR2_2 <br>
 Voltage (kV): 15.75
 
+
+
+
+### ⚡ Task 2.3 – Current Limits for Line: NL-Line_5
+
+---
+
+## 🧭 Task Summary
+
+> **Objective:**  
+Extract the **current limit values (Amperes)** for a specific transmission line – `NL-Line_5` – from the provided CGMES EQ profile.
+
+---
+
+## 🛠️ Thought Process & Tooling
+
+This task focuses on understanding how operational limits are **linked across different CIM elements**:
+- First, I locate `OperationalLimitSet` blocks where the description contains the target line name (`NL-Line_5`).
+- Then, I extract all `CurrentLimit` entries referencing those sets.
+
+The XML is parsed using `xml.etree.ElementTree`, and namespace handling ensures accurate access to nested RDF/CIM elements.
+
+---
+
+## ✍️ Result Summary – Answer to Task 2.3
+
+The script produced the following output:
+
+Limit Name: TATL
+Current Value (A): 500
+
+Limit Name: PATL
+Current Value (A): 1876
+---
+
+## 🧾 Terminology Clarification – PATL vs. TATL
+
+In CGMES EQ profiles, transmission lines can have two distinct current limits:
+
+- **PATL** – *Permanently Admissible Transmission Limit*  
+  This is the **maximum continuous current** the line can carry under normal conditions.  
+  → Represented as `normalValue` in `<cim:CurrentLimit>`.
+
+- **TATL** – *Temporarily Admissible Transmission Limit*  
+  This is a **higher current limit allowed only during emergencies or contingency situations**.  
+  → Represented as `emergencyValue`, if present.
+
+### 🔄 Difference
+
+| Type | Condition | Duration | Purpose |
+|------|-----------|----------|---------|
+| PATL | Normal operation | Unlimited | Safe long-term operation |
+| TATL | Emergency use only | Limited time | Short-term overload capability |
+
