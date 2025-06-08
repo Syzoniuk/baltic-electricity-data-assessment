@@ -84,7 +84,7 @@ If the API had returned activation values, I would expect **corrective actions t
 
 ---
 
-## 📁 Project Files (Task 2)
+## 📁 Project Files (Task 1)
 
 ```
 baltic-electricity-data-assessment/
@@ -94,9 +94,6 @@ baltic-electricity-data-assessment/
 │   └── imbalance_activation_2024.png   # Logic validation
 └
 ```
-
----
-
 
 ---
 
@@ -131,7 +128,7 @@ The script follows a simple logic:
 
 ---
 
-## ✍️ Result Summary – Answer to Task 2.1
+## Result Summary – Answer to Task 2.1
 
 The script parsed all generating units and extracted their declared maximum active power output. The final output displays:
 
