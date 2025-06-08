@@ -62,7 +62,7 @@ Here, upward and downward activation data are available. They are plotted with d
 
 ---
 
-### ✍️ Analysis – Answer to Task Part 4
+### Analysis – Answer to Task Part 4
 
 Although the API did not contain valid data for the requested 2025-02-07 to 2025-02-11 period, I reproduced the same logic using the 2024-02-07 to 2024-02-11 window. This allows demonstration of the expected dynamics.
 
@@ -131,10 +131,6 @@ The script parsed all generating units and extracted their declared maximum acti
 - Each generator’s name (if available) and capacity in MW.
 - A total summation of available generation capacity across the modeled system.
 
-> 💡 This allows a clear, reproducible evaluation of production potential from the static network model.
-
----
-
 ---
 
 ## 🔌 Task 2.2 – Transformer Winding Voltages
@@ -162,7 +158,7 @@ Namespaces used:
 
 ---
 
-### ✍️ Result Summary – Answer to Task 2.2
+###  Result Summary – Answer to Task 2.2
 
 The script successfully identified and printed the **rated voltages (in kV)** for each winding of the transformer.  
 It lists all connected windings, their names, and their voltage ratings.
@@ -196,7 +192,7 @@ The XML is parsed using `xml.etree.ElementTree`, and namespace handling ensures 
 
 ---
 
-### ✍️ Result Summary – Answer to Task 2.3
+###  Result Summary – Answer to Task 2.3
 
 The script produced the following output:
 
@@ -216,7 +212,7 @@ In CGMES EQ profiles, transmission lines can have two distinct current limits:
 - **TATL** – *Temporarily Admissible Transmission Limit*  
   This is a **higher current limit allowed only during emergencies or contingency situations**.  
 
-### 🔄 Difference
+### Difference
 
 | Type | Condition | Duration | Purpose |
 |------|-----------|----------|---------|
@@ -230,44 +226,39 @@ In CGMES EQ profiles, transmission lines can have two distinct current limits:
 ---
 
 > **Objective:**  
-Determine which generator is used as the **slack** (angle reference) in the provided CGMES model, based on structural indicators available in the EQ profile.
+Determine which generator is used as the **slack** in the provided CGMES model, based on structural indicators available in the EQ profile.
 
 ---
 
 ### 🧠 Thought Process & Heuristic Strategy
 
-According to the [CGMES Implementation Guide 2.4.15] [1], the slack generator is typically defined by the attribute:
+In CGMES-compliant systems, the slack generator is typically defined using the following hierarchy:
 
-- `SynchronousMachine.referencePriority = 1` in the SSH profile
+1. `SynchronousMachine.referencePriority = 1` → official CGMES marker [1]  
+2. `GeneratingUnit.normalPF > 0` → used for distributed slack participation [1]  
+3. `TopologicalIsland.AngleRefTopologicalNode` → used when SV profiles are available [1]
 
-However, in this model:
-- The SSH and SV profiles were not provided
-- The `referencePriority` tag was missing
-- No `GeneratingUnit.normalPF` attributes were available
+In this model: 
+- The `referencePriority` tag was missing  
+- No `normalPF` attributes were available
 
-As described in [1], when multiple generators have `referencePriority = 1`, the slack is distributed using `normalPF`.  
-When none of these tags exist, the model cannot be interpreted using formal CGMES rules.
+As described in [1], when multiple generators have `referencePriority = 1`, the slack is distributed using `normalPF`. When none of these tags exist, the model cannot be interpreted using formal CGMES rules.
 
-Instead, we applied a **structural fallback heuristic** based on [2] and supported by system modeling principles discussed in [3]:
+Therefore, I applied a **structured fallback heuristic** based on CGMES linkage rules [2] and system modeling principles discussed in [3]:
 
-> If a generator is connected to a `RegulatingControl` object set to `mode = voltage`, and this control is tied to a terminal connected to the generator, we assume this generator likely acts as the slack unit.
+1. I first searched for `RegulatingControl` blocks set to `mode = voltage`, as these are typically used to regulate bus voltage — a role often fulfilled by slack generators in simulation environments [2].
 
----
+2. From each voltage-mode control, I followed the linked `Terminal`.
 
-### ⚙️ Tooling & Algorithm
+3. From each `Terminal`, I traced the associated `ConductingEquipment`, leading to connected `SynchronousMachine` elements [2].
 
-The analysis traverses standard CIM references in three steps:
+4. Only one generator — `NL-G1` — was uniquely linked through this voltage-regulation structure.
 
-| Step | CIM Element | Description |
-|------|-------------|-------------|
-| 1️⃣ | `RegulatingControl.mode = voltage` | Control object assigned to voltage regulation [2] |
-| 2️⃣ | `RegulatingControl.Terminal` | Identifies the controlled terminal [2] |
-| 3️⃣ | `Terminal.ConductingEquipment → SynchronousMachine` | Maps terminal to generator [2] |
-
+Based on this structural chain and the absence of standard slack indicators, I concluded that `NL-G1` was most likely intended as the slack generator in this model.
 
 ---
 
-### ✍️ Result Summary – Answer to Task 2.4
+###  Result Summary – Answer to Task 2.4
 
 The script successfully identified the following generator based on structural links:
 
@@ -278,10 +269,6 @@ The script successfully identified the following generator based on structural l
 > ⚠️ This is a heuristic result, not a formally defined slack unit per CGMES. It is used only when standard slack markers are absent [1], [2].
 
 ---
-
-### 📁 Project Files (Task 2.4)
-
-
 
 ### 📚 References
 
