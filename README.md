@@ -25,7 +25,7 @@
 
 ---
 
-## 🛠️ Thought Process & Tooling
+## Thought Process & Tooling
 
 To ensure clarity and modularity, I broke the task into data fetching, filtering, alignment, and plotting stages. Here’s why I chose each tool:
 
@@ -42,7 +42,7 @@ To ensure clarity and modularity, I broke the task into data fetching, filtering
 
 ## 📈 Final Output – Visualizations
 
-### 🔹 Figure 1 – 2025-02-07 to 2025-02-11
+###  Figure 1 – 2025-02-07 to 2025-02-11
 
 ![Figure 1](Task1_Imbalance_Analysis/images/imbalance_activation_2025.png)
 
@@ -53,7 +53,7 @@ This approach keeps the structure intact and ensures full visibility. The legend
 
 ---
 
-### 🔹 Figure 2 – 2024-02-07 to 2024-02-11 (Test)
+### Figure 2 – 2024-02-07 to 2024-02-11 (Test)
 
 ![Figure 2](Task1_Imbalance_Analysis/images/imbalance_activation_2024.png)
 
@@ -108,14 +108,12 @@ Each sub-task examines specific elements of the EQ model — from generation cap
 
 ---
 
-## 🧭 Task Summary
-
 > **Objective:**  
 Extract and calculate the **total production capacity** of all generators modeled in the provided CGMES EQ profile XML file.
 
 ---
 
-## 🛠️ Thought Process & Tooling
+## Thought Process & Tooling
 
 This task focuses on **static power system modeling** via the EQ (Equipment) profile in CIM/XML format. I chose to directly parse the XML with Python’s `xml.etree.ElementTree`, as it’s lightweight and sufficient for structured CIM data when no inference or semantic layer is needed.
 
@@ -145,14 +143,12 @@ The script parsed all generating units and extracted their declared maximum acti
 
 ---
 
-## 🧭 Task Summary
-
 > **Objective:**  
 Identify and extract the **rated voltages** for each winding of a specific transformer (by ID) from the CGMES EQ profile XML.
 
 ---
 
-## 🛠️ Thought Process & Tooling
+##  Thought Process & Tooling
 
 We focus here on a specific transformer with ID `_2184f365-8cd5-4b5d-8a28-9d68603bb6a4`.  
 The logic follows these steps:
@@ -186,14 +182,12 @@ Voltage (kV): 15.75
 
 ---
 
-## 🧭 Task Summary
-
 > **Objective:**  
 Extract the **current limit values (Amperes)** for a specific transmission line – `NL-Line_5` – from the provided CGMES EQ profile.
 
 ---
 
-## 🛠️ Thought Process & Tooling
+##  Thought Process & Tooling
 
 This task focuses on understanding how operational limits are **linked across different CIM elements**:
 - First, I locate `OperationalLimitSet` blocks where the description contains the target line name (`NL-Line_5`).
@@ -213,18 +207,14 @@ Current Value (A): 500
 Limit Name: PATL
 Current Value (A): 1876
 ---
-
-## 🧾 Terminology Clarification – PATL vs. TATL
-
 In CGMES EQ profiles, transmission lines can have two distinct current limits:
 
 - **PATL** – *Permanently Admissible Transmission Limit*  
   This is the **maximum continuous current** the line can carry under normal conditions.  
-  → Represented as `normalValue` in `<cim:CurrentLimit>`.
+
 
 - **TATL** – *Temporarily Admissible Transmission Limit*  
   This is a **higher current limit allowed only during emergencies or contingency situations**.  
-  → Represented as `emergencyValue`, if present.
 
 ### 🔄 Difference
 
