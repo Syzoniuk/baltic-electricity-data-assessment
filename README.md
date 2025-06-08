@@ -223,3 +223,73 @@ In CGMES EQ profiles, transmission lines can have two distinct current limits:
 | PATL | Normal operation | Unlimited | Safe long-term operation |
 | TATL | Emergency use only | Limited time | Short-term overload capability |
 
+
+
+## ⚡ Task 2.4 – Slack Generator Identification
+
+---
+
+> **Objective:**  
+Determine which generator is used as the **slack** (angle reference) in the provided CGMES model, based on structural indicators available in the EQ profile.
+
+---
+
+### 🧠 Thought Process & Heuristic Strategy
+
+According to the [CGMES Implementation Guide 2.4.15] [1], the slack generator is typically defined by the attribute:
+
+- `SynchronousMachine.referencePriority = 1` in the SSH profile
+
+However, in this model:
+- The SSH and SV profiles were not provided
+- The `referencePriority` tag was missing
+- No `GeneratingUnit.normalPF` attributes were available
+
+As described in [1], when multiple generators have `referencePriority = 1`, the slack is distributed using `normalPF`.  
+When none of these tags exist, the model cannot be interpreted using formal CGMES rules.
+
+Instead, we applied a **structural fallback heuristic** based on [2] and supported by system modeling principles discussed in [3]:
+
+> If a generator is connected to a `RegulatingControl` object set to `mode = voltage`, and this control is tied to a terminal connected to the generator, we assume this generator likely acts as the slack unit.
+
+---
+
+### ⚙️ Tooling & Algorithm
+
+The analysis traverses standard CIM references in three steps:
+
+| Step | CIM Element | Description |
+|------|-------------|-------------|
+| 1️⃣ | `RegulatingControl.mode = voltage` | Control object assigned to voltage regulation [2] |
+| 2️⃣ | `RegulatingControl.Terminal` | Identifies the controlled terminal [2] |
+| 3️⃣ | `Terminal.ConductingEquipment → SynchronousMachine` | Maps terminal to generator [2] |
+
+
+---
+
+### ✍️ Result Summary – Answer to Task 2.4
+
+The script successfully identified the following generator based on structural links:
+
+- **Likely Slack Generator:** `NL-G1`  
+- **CGMES ID:** `_9c3b8f97-7972-477d-9dc8-87365cc0ad0e`  
+- **Reasoning:** This generator is connected via terminal to a `RegulatingControl` object operating in `voltage` mode
+
+> ⚠️ This is a heuristic result, not a formally defined slack unit per CGMES. It is used only when standard slack markers are absent [1], [2].
+
+---
+
+### 📁 Project Files (Task 2.4)
+
+
+
+### 📚 References
+
+[1] ENTSO-E, *Implementation Guide for CGMES 2.4.15*, March 2016.  
+https://eepublicdownloads.entsoe.eu/clean-documents/CIM_documents/Grid_Model_CIM/160315_ImplementationGuide_CGMES_2_4_15.pdf
+
+[2] IEC TC57, *Technical Specification for CGMES 2.5 – Part 1 (IEC 61970-600 Ed2)*, 2016.  
+https://eepublicdownloads.entsoe.eu/clean-documents/CIM_documents/IOP/CGMES_2_5_TechnicalSpecification_61970-600_Part%201_Ed2.pdf
+
+[3] S. V. Dhople, Y. C. Chen, A. Al-Digs, and A. Domínguez-García, “Reexamining the Distributed Slack Bus,” *IEEE Transactions on Power Systems*, vol. 35, no. 6, pp. 4894–4904, 2020.  
+https://aledan.ece.illinois.edu/files/2020/04/TPWRS_2020a.pdf
