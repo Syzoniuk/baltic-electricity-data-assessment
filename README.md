@@ -11,10 +11,17 @@
 
 - [Task 1 – Baltic Imbalance & Activation Analysis](#-task-1--baltic-imbalance--activation-analysis)
 - [Task 2 – EQ Profile Model Assessment](#-task-2--eq-profile-model-assessment)
-  - [Task 2.1 – Total Generator Capacity](#task-21--total-generator-capacity)
-- [Task 3 – ... (Add when ready)](#)
-
----
+  - [Task 2.1 – Total Generator Capacity](#-task-21--total-generator-capacity)
+  - [Task 2.2 – Transformer Winding Voltages](#-task-22--transformer-winding-voltages)
+  - [Task 2.3 – Current Limits for Line: NL-Line_5](#-task-23--current-limits-for-line-nl-line_5)
+  - [Task 2.4 – Slack Generator Identification](#-task-24--slack-generator-identification)
+  - [Task 2.5 – Confirmed Modeling Errors in EQ Profile](#-task-25--confirmed-modeling-errors-in-eq-profile)
+- [Task 3 – Time and Time Period Interoperability](#-task-3--time-and-time-period-interoperability)
+  - [Question 1 – UTC vs Local Time](#-1-why-and-where-should-one-use-utc-time-why-and-where-should-one-use-local-time)
+  - [Question 2 – Time Period Notation](#-2-which-notation-of-time-period-definition-would-you-use)
+  - [Question 3 – Generate Time Periods](#-3-generate-hourly-time-periods-for-the-next-calendar-day-in-cet)
+  - [Project Files (Task 3)](#project-files-task-3)
+- [References](#-references)
 
 ## 🧭 Task 1 – Baltic Imbalance & Activation Analysis
 
@@ -225,8 +232,10 @@ In CGMES EQ profiles, transmission lines can have two distinct current limits:
 | TATL | Emergency use only | Limited time | Short-term overload capability |
 
 
+---
 
 ## ⚡ Task 2.4 – Slack Generator Identification
+
 ---
 
 > **Objective:**  
@@ -289,13 +298,14 @@ The script identified the following likely slack generator based on structural r
 
 > ⚠️ This result is **heuristic**, not formally declared by CGMES metadata. 
 
+---
 ## ❌ Task 2.5 – Confirmed Modeling Errors in EQ Profile
 
 > This section lists only the **definitive** structural or semantic errors found in the EQ profile XML model for Task 2.5. All issues below are validated against CGMES standards and XML schema rules.
 
 ---
 
-### 1. 🔧 Invalid Transformer Winding Assignment
+### 1. Invalid Transformer Winding Assignment
 
 - **Affected Elements**:
   - `NL_TR2_2`
@@ -318,7 +328,7 @@ The script identified the following likely slack generator based on structural r
 
 ---
 
-### 2. ✅ XML Malformation – Corrected Manually
+### 2. XML Malformation – Corrected Manually
 
 - **Original Issue**:
   Line **16** of the XML file was missing a closing tag `</cim:LoadArea>`
@@ -328,6 +338,98 @@ The script identified the following likely slack generator based on structural r
 
 - **Impact**:  
   This resolved the XML parsing failure. The file is now well-formed and accepted by XML parsers.
+
+---
+
+
+### 📁 Project Files (Task 2)
+
+```
+│
+├── Task2_EQ_Profile_Assessment/
+│ ├── 20210325T1530Z_1D_NL_EQ_001.xml # Provided CGMES EQ profile
+│ ├── task2_1_total_capacity.py # Task 2.1 – Generator capacity extraction
+│ ├── task2_2_transformer_voltages.py # Task 2.2 – Transformer winding voltage check
+│ ├── task2_3_current_limits.py # Task 2.3 – AC line current limits
+│ └── task2_4_slack_generator.py # Task 2.4 – Slack generator heuristic detection
+
+```
+
+
+## 🕓 Task 3 – Time and Time Period Interoperability
+
+### ❓ 1. Why and where should one use UTC time? Why and where should one use local time?
+
+#### ✅ Use UTC time when:
+- Storing or exchanging power system data across systems and regions [4]  
+- Aligning events for grid-wide analysis, fault reconstruction, and blackout investigation [4]  
+- Synchronizing timestamps in CGMES, SCADA, synchrophasors (PMUs), and COMTRADE files [4]  
+- Meeting regulatory and interoperability requirements (e.g., CGMES, ENTSO-E, NERC) [1]  
+
+#### 🌍 Use Local Time when:
+- Displaying times in operator dashboards or user interfaces [4]  
+- Creating reports or schedules where context (e.g., local holidays or tariffs) matters [4]  
+- Communicating with users or customers expecting time in their regional zone [4]  
+
+> ✅ **Best practice**: Use **UTC internally**, and convert to **local time** only at the presentation layer.
+
+---
+
+
+### ❓ 2. Which notation of time period definition would you use?
+
+✅ **Recommended notation:**  
+**Left-closed, right-open** interval:  
+`[2022-08-01T00:00Z, 2022-08-01T01:00Z)`
+
+This format is used in CGMES profiles and most time-series processing systems [1][2].
+
+#### ✅ Advantages of left-closed, right-open:
+- Prevents overlap between consecutive periods  
+- Simplifies duration calculations (`end - start`)  
+- Avoids ambiguity around midnight or boundary alignment  
+- Compatible with slicing in programming and databases (e.g., pandas, SQL)  
+- Explicitly avoids including the endpoint, which is ideal for 1-second or 1-hour intervals
+
+#### ⚠️ Issues with left-closed, right-closed:  
+`[start, end]` includes both ends — this can cause:
+- Double-counting when intervals are stacked  
+- Confusion near boundaries (e.g., [00:00, 00:59] technically ends before 01:00, but lacks precision)  
+- More complex logic when calculating durations or overlaps
+
+> 📌 Left-closed, right-open (`[start, end)`) is the **de facto standard** in energy modeling, event logging, and time-series formats like CGMES and OPC UA [1][2].
+
+---
+
+### ❓ 3. Generate hourly time periods for the next calendar day in CET
+
+**Goal:** Starting from the current time, generate 1-hour resolution time periods (PT1H) for the **next day**, from **00:00 to 23:00 CET**, using **left-closed, right-open** format.
+
+> 📎 The script is available in `task3_time_intervals.py`.
+
+**Output Format Example** (for next day in June, CET/CEST aware):
+
+[2025-06-10T00:00:00+02:00, 2025-06-10T01:00:00+02:00) <br>
+[2025-06-10T01:00:00+02:00, 2025-06-10T02:00:00+02:00) <br>
+... <br>
+[2025-06-10T23:00:00+02:00, 2025-06-11T00:00:00+02:00) <br>
+
+
+This structure:
+
+- Ensures **24 safe hourly intervals**  
+- Automatically adjusts for **daylight saving** via `pytz`  
+- Complies with **CGMES-compatible ISO 8601 + TZ offset format**  
+
+### 📁 Project Files (Task 3)
+
+```
+
+├── Task3_Time_Periods_Interoperability/
+│ └── task3_time_periods.py # Task 3 – Time period generation script (PT1H resolution)
+
+```
+
 
 ---
 ### 📚 References
@@ -340,3 +442,9 @@ https://eepublicdownloads.entsoe.eu/clean-documents/CIM_documents/IOP/CGMES_2_5_
 
 [3] S. V. Dhople, Y. C. Chen, A. Al-Digs, and A. Domínguez-García, “Reexamining the Distributed Slack Bus,” *IEEE Transactions on Power Systems*, vol. 35, no. 6, pp. 4894–4904, 2020.  
 https://aledan.ece.illinois.edu/files/2020/04/TPWRS_2020a.pdf
+
+[4] Dickerson, B. *Time in the Power Industry: How and Why We Use It*. Arbiter Systems, IEEE Life Fellow, 2021.  
+https://www.arbiter.com/files/product-attachments/TimeInThePowerIndustry.pdf
+
+
+
