@@ -288,6 +288,47 @@ The script identified the following likely slack generator based on structural r
 - **Justification:** Uniquely connected via a voltage-mode `RegulatingControl` chain to a `SynchronousMachine`
 
 > ⚠️ This result is **heuristic**, not formally declared by CGMES metadata. 
+
+## ❌ Task 2.5 – Confirmed Modeling Errors in EQ Profile
+
+> This section lists only the **definitive** structural or semantic errors found in the EQ profile XML model for Task 2.5. All issues below are validated against CGMES standards and XML schema rules.
+
+---
+
+### 1. 🔧 Invalid Transformer Winding Assignment
+
+- **Affected Elements**:
+  - `NL_TR2_2`
+  - `NL_TR2_3`
+  - `NL_TR2_4`
+
+- **Error Description**:  
+  All three `PowerTransformerEnd` elements reference the **same transformer ID**:  
+  `rdf:resource="#_2184f365-8cd5-4b5d-8a28-9d68603bb6a4"`
+
+- **Why This Is Invalid**:  
+  According to the CGMES standard [2], each transformer end must be uniquely connected within a multi-winding transformer. Specifically:
+  
+  > “Each end within a power transformer should have a unique subsequent `endNumber`… The high voltage side is given by `TransformerEnd.endNumber = 1`… Parameters like `r`, `x` must be set only on that side.”  
+
+  In this case, all three ends are assigned to the **same transformer**, which is structurally incorrect unless explicitly modeled as a multi-winding transformer with unique `endNumber`s and parameter separation. This requirement was emphasized in the CGMES Implementation Guide Workshop notes (March 2016).
+
+- **Impact**:  
+  This causes incorrect electrical modeling and violates the transformer configuration semantics required by CGMES. Power system tools may fail to correctly interpret the topology or calculate impedances.
+
+---
+
+### 2. ✅ XML Malformation – Corrected Manually
+
+- **Original Issue**:
+  Line **16** of the XML file was missing a closing tag `</cim:LoadArea>`
+
+- **Resolution**:
+  A valid closing tag was manually added at line 16 to fix the issue.
+
+- **Impact**:  
+  This resolved the XML parsing failure. The file is now well-formed and accepted by XML parsers.
+
 ---
 ### 📚 References
 
