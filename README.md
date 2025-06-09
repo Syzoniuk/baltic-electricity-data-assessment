@@ -20,17 +20,18 @@
   - [Question 1 – UTC vs Local Time](#-1-why-and-where-should-one-use-utc-time-why-and-where-should-one-use-local-time)
   - [Question 2 – Time Period Notation](#-2-which-notation-of-time-period-definition-would-you-use)
   - [Question 3 – Generate Time Periods](#-3-generate-hourly-time-periods-for-the-next-calendar-day-in-cet)
-  - [Project Files (Task 3)](#project-files-task-3)
 - [References](#-references)
 
 ## 🧭 Task 1 – Baltic Imbalance & Activation Analysis
 
-1. Inherit data on **Baltic imbalance volumes**.
-2. Inherit data on **activation volumes** (upward and downward).
-3. Plot both datasets in one clear, well-labeled figure.
-4. Analyze whether activation responses reduced imbalance during **2025-02-07 to 2025-02-11**.
-
 ---
+> **Objective:**
+> 1. Inherit data on **Baltic imbalance volumes**.
+> 2. Inherit data on **activation volumes** (upward and downward).
+> 3. Plot both datasets in one clear, well-labeled figure.
+> 4. Analyze whether activation responses reduced imbalance during **2025-02-07 to 2025-02-11**.
+---
+
 
 ### 🧠 Thought Process & Tooling
 
@@ -181,9 +182,7 @@ It lists all connected windings, their names, and their voltage ratings.
 #### Winding: NL_TR2_2 
 #### Voltage (kV): 15.75
 
-
-
-
+---
 
 ## ⚡ Task 2.3 – Current Limits for Line: NL-Line_5
 
@@ -253,7 +252,7 @@ In CGMES-compliant systems, the slack generator is typically defined using the f
 
 ---
 
-### 🔍 Application to This Model
+### Application to This Model
 
 In the provided XML file:
 
@@ -265,7 +264,7 @@ Due to the absence of these formal slack indicators, the model could not be inte
 
 ---
 
-### ⚙️ Heuristic Approach
+###  Heuristic Approach
 
 We applied a **structured fallback logic** based on CGMES linkage rules [2] and CIM modeling practices [3]:
 
@@ -355,8 +354,11 @@ The script identified the following likely slack generator based on structural r
 
 ```
 
+---
 
 ## 🕓 Task 3 – Time and Time Period Interoperability
+
+---
 
 ### ❓ 1. Why and where should one use UTC time? Why and where should one use local time?
 
@@ -420,6 +422,9 @@ This structure:
 - Ensures **24 safe hourly intervals**  
 - Automatically adjusts for **daylight saving** via `pytz`  
 - Complies with **CGMES-compatible ISO 8601 + TZ offset format**  
+
+---
+
 
 ### 📁 Project Files (Task 3)
 
