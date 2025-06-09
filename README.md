@@ -25,7 +25,7 @@
 
 ---
 
-### Thought Process & Tooling
+### 🧠 Thought Process & Tooling
 
 To ensure clarity and modularity, I broke the task into data fetching, filtering, alignment, and plotting stages. Here’s why I chose each tool:
 
@@ -62,7 +62,7 @@ Here, upward and downward activation data are available. They are plotted with d
 
 ---
 
-### Analysis – Answer to Task Part 4
+### ✅ Analysis – Answer to Task Part 4
 
 Although the API did not contain valid data for the requested 2025-02-07 to 2025-02-11 period, I reproduced the same logic using the 2024-02-07 to 2024-02-11 window. This allows demonstration of the expected dynamics.
 
@@ -113,7 +113,7 @@ Extract and calculate the **total production capacity** of all generators modele
 
 ---
 
-### Thought Process & Tooling
+### 🧠 Thought Process & Tooling
 
 This task focuses on **static power system modeling** via the EQ (Equipment) profile in CIM/XML format. I chose to directly parse the XML with Python’s `xml.etree.ElementTree`, as it’s lightweight and sufficient for structured CIM data when no inference or semantic layer is needed.
 
@@ -124,12 +124,17 @@ The script follows a simple logic:
 
 ---
 
-### Result Summary – Answer to Task 2.1
+### ✅ Result Summary – Answer to Task 2.1
 
 The script parsed all generating units and extracted their declared maximum active power output. The final output displays:
 
 - Each generator’s name (if available) and capacity in MW.
 - A total summation of available generation capacity across the modeled system.
+
+#### • Gen-12908: 250.0 MW <br>
+#### • Gen-12923: 1000.0 MW <br>
+#### • Gen-12910: 250.0 MW <br> 
+#### TOTAL PRODUCTION CAPACITY: 1500.00 MW
 
 ---
 
@@ -142,7 +147,7 @@ Identify and extract the **rated voltages** for each winding of a specific trans
 
 ---
 
-###  Thought Process & Tooling
+### 🧠 Thought Process & Tooling
 
 We focus here on a specific transformer with ID `_2184f365-8cd5-4b5d-8a28-9d68603bb6a4`.  
 The logic follows these steps:
@@ -158,16 +163,16 @@ Namespaces used:
 
 ---
 
-###  Result Summary – Answer to Task 2.2
+### ✅ Result Summary – Answer to Task 2.2
 
 The script successfully identified and printed the **rated voltages (in kV)** for each winding of the transformer.  
 It lists all connected windings, their names, and their voltage ratings.
 
-Winding: NL_TR2_2 <br>
-Voltage (kV): 220
+#### Winding: NL_TR2_2 
+#### Voltage (kV): 220
 
-Winding: NL_TR2_2 <br>
-Voltage (kV): 15.75
+#### Winding: NL_TR2_2 
+#### Voltage (kV): 15.75
 
 
 
@@ -182,7 +187,7 @@ Extract the **current limit values (Amperes)** for a specific transmission line 
 
 ---
 
-###  Thought Process & Tooling
+### 🧠  Thought Process & Tooling
 
 This task focuses on understanding how operational limits are **linked across different CIM elements**:
 - First, I locate `OperationalLimitSet` blocks where the description contains the target line name (`NL-Line_5`).
@@ -192,15 +197,15 @@ The XML is parsed using `xml.etree.ElementTree`, and namespace handling ensures 
 
 ---
 
-###  Result Summary – Answer to Task 2.3
+### ✅ Result Summary – Answer to Task 2.3
 
 The script produced the following output:
 
-  Limit Type  Normal Value (A) <br>
-0       PATL            1876.0 <br>
-1       TATL             500.0 <br>
-2       PATL            1876.0 <br>
-3       TATL             500.0 <br>
+####  Limit Type  Normal Value (A) <br>
+#### 0       PATL            1876.0 <br>
+#### 1       TATL             500.0 <br>
+#### 2       PATL            1876.0 <br>
+#### 3       TATL             500.0 <br>
 
 ---
 In CGMES EQ profiles, transmission lines can have two distinct current limits:
@@ -222,7 +227,6 @@ In CGMES EQ profiles, transmission lines can have two distinct current limits:
 
 
 ## ⚡ Task 2.4 – Slack Generator Identification
-
 ---
 
 > **Objective:**  
@@ -230,46 +234,61 @@ Determine which generator is used as the **slack** in the provided CGMES model, 
 
 ---
 
-### 🧠 Thought Process & Heuristic Strategy
+### 🧠 Thought Process & Methodology
 
-In CGMES-compliant systems, the slack generator is typically defined using the following hierarchy:
+In CGMES-compliant systems, the slack generator is typically defined using the following official indicators:
 
-1. `SynchronousMachine.referencePriority = 1` → official CGMES marker [1]  
-2. `GeneratingUnit.normalPF > 0` → used for distributed slack participation [1]  
-3. `TopologicalIsland.AngleRefTopologicalNode` → used when SV profiles are available [1]
-
-In this model: 
-- The `referencePriority` tag was missing  
-- No `normalPF` attributes were available
-
-As described in [1], when multiple generators have `referencePriority = 1`, the slack is distributed using `normalPF`. When none of these tags exist, the model cannot be interpreted using formal CGMES rules.
-
-Therefore, I applied a **structured fallback heuristic** based on CGMES linkage rules [2] and system modeling principles discussed in [3]:
-
-1. I first searched for `RegulatingControl` blocks set to `mode = voltage`, as these are typically used to regulate bus voltage — a role often fulfilled by slack generators in simulation environments [2].
-
-2. From each voltage-mode control, I followed the linked `Terminal`.
-
-3. From each `Terminal`, I traced the associated `ConductingEquipment`, leading to connected `SynchronousMachine` elements [2].
-
-4. Only one generator — `NL-G1` — was uniquely linked through this voltage-regulation structure.
-
-Based on this structural chain and the absence of standard slack indicators, I concluded that `NL-G1` was most likely intended as the slack generator in this model.
+1. `SynchronousMachine.referencePriority = 1` → formal slack assignment in CGMES EQ models [1]  
+2. `GeneratingUnit.normalPF > 0` → supports distributed slack participation across units [1]  
+3. `TopologicalIsland.AngleRefTopologicalNode` → angle reference node defined in SV profiles [1]
 
 ---
 
-###  Result Summary – Answer to Task 2.4
+### 🔍 Application to This Model
 
-The script successfully identified the following generator based on structural links:
+In the provided XML file:
+
+- No `referencePriority` tags were present in any `SynchronousMachine` block  
+- No `normalPF` attributes were found in any `GeneratingUnit` block  
+- No SV profiles were available to identify angle reference nodes
+
+Due to the absence of these formal slack indicators, the model could not be interpreted directly using CGMES-defined logic. Therefore, a fallback method was used to infer the slack generator.
+
+---
+
+### ⚙️ Heuristic Approach
+
+We applied a **structured fallback logic** based on CGMES linkage rules [2] and CIM modeling practices [3]:
+
+1. **Identify all** `RegulatingControl` elements with `mode = voltage`  
+   → These are typically used to regulate bus voltage — a behavior aligned with slack-like control in simulations [2]
+
+2. **Follow each** `RegulatingControl.Terminal` reference  
+   → Extract the RDF ID of the `Terminal` associated with each voltage-mode control
+
+3. **Resolve each Terminal** to its `ConductingEquipment`  
+   → This gives the equipment (e.g., a generator) controlled by that terminal
+
+4. **Match the resulting equipment** with known `SynchronousMachine` IDs  
+   → A match indicates a generator linked through voltage control logic
+
+Through this process, one unique machine was found:  
+- It was structurally linked from a `RegulatingControl(mode=voltage)`  
+- Mapped via `Terminal → ConductingEquipment`  
+- Resolved to a `SynchronousMachine` object
+
+---
+
+### ✅ Result Summary – Answer to Task 2.4
+
+The script identified the following likely slack generator based on structural relationships:
 
 - **Likely Slack Generator:** `NL-G1`  
 - **CGMES ID:** `_9c3b8f97-7972-477d-9dc8-87365cc0ad0e`  
-- **Reasoning:** This generator is connected via terminal to a `RegulatingControl` object operating in `voltage` mode
+- **Justification:** Uniquely connected via a voltage-mode `RegulatingControl` chain to a `SynchronousMachine`
 
-> ⚠️ This is a heuristic result, not a formally defined slack unit per CGMES. It is used only when standard slack markers are absent [1], [2].
-
+> ⚠️ This result is **heuristic**, not formally declared by CGMES metadata. 
 ---
-
 ### 📚 References
 
 [1] ENTSO-E, *Implementation Guide for CGMES 2.4.15*, March 2016.  
