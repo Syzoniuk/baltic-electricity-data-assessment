@@ -157,7 +157,7 @@ Identify and extract the **rated voltages** for each winding of a specific trans
 
 ### 🧠 Thought Process & Tooling
 
-We focus here on a specific transformer with ID `_2184f365-8cd5-4b5d-8a28-9d68603bb6a4`.  
+I focus here on a specific transformer with ID `_2184f365-8cd5-4b5d-8a28-9d68603bb6a4`.  
 The logic follows these steps:
 
 1. Search all `<cim:PowerTransformerEnd>` elements.
@@ -184,12 +184,12 @@ It lists all connected windings, their names, and their voltage ratings.
 
 ---
 
-## ⚡ Task 2.3 – Current Limits for Line: NL-Line_5
+## ⚡ Task 2.3 – Operational Limits  for Line: NL-Line_5
 
 ---
 
 > **Objective:**  
-Extract the **current limit values (Amperes)** for a specific transmission line – `NL-Line_5` – from the provided CGMES EQ profile.
+Extract the **operational limits** for a specific transmission line – `NL-Line_5` – from the provided CGMES EQ profile.
 
 ---
 
@@ -248,7 +248,7 @@ In CGMES-compliant systems, the slack generator is typically defined using the f
 
 1. `SynchronousMachine.referencePriority = 1` → formal slack assignment in CGMES EQ models [1]  
 2. `GeneratingUnit.normalPF > 0` → supports distributed slack participation across units [1]  
-3. `TopologicalIsland.AngleRefTopologicalNode` → angle reference node defined in SV profiles [1]
+
 
 ---
 
@@ -258,7 +258,7 @@ In the provided XML file:
 
 - No `referencePriority` tags were present in any `SynchronousMachine` block  
 - No `normalPF` attributes were found in any `GeneratingUnit` block  
-- No SV profiles were available to identify angle reference nodes
+
 
 Due to the absence of these formal slack indicators, the model could not be interpreted directly using CGMES-defined logic. Therefore, a fallback method was used to infer the slack generator.
 
@@ -266,7 +266,7 @@ Due to the absence of these formal slack indicators, the model could not be inte
 
 ###  Heuristic Approach
 
-We applied a **structured fallback logic** based on CGMES linkage rules [2] and CIM modeling practices [3]:
+I applied a **structured fallback logic** based on CGMES linkage rules [2] and CIM modeling practices [3]:
 
 1. **Identify all** `RegulatingControl` elements with `mode = voltage`  
    → These are typically used to regulate bus voltage — a behavior aligned with slack-like control in simulations [2]
@@ -322,8 +322,6 @@ The script identified the following likely slack generator based on structural r
 
   In this case, all three ends are assigned to the **same transformer**, which is structurally incorrect unless explicitly modeled as a multi-winding transformer with unique `endNumber`s and parameter separation. This requirement was emphasized in the CGMES Implementation Guide Workshop notes (March 2016).
 
-- **Impact**:  
-  This causes incorrect electrical modeling and violates the transformer configuration semantics required by CGMES. Power system tools may fail to correctly interpret the topology or calculate impedances.
 
 ---
 
@@ -416,12 +414,6 @@ This format is used in CGMES profiles and most time-series processing systems [1
 ... <br>
 [2025-06-10T23:00:00+02:00, 2025-06-11T00:00:00+02:00) <br>
 
-
-This structure:
-
-- Ensures **24 safe hourly intervals**  
-- Automatically adjusts for **daylight saving** via `pytz`  
-- Complies with **CGMES-compatible ISO 8601 + TZ offset format**  
 
 ---
 
